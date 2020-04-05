@@ -67,4 +67,4 @@ def get_movies():
         return "Please try again after some time"
 
 if __name__ == '__main__':
-   app.run('139.59.66.134',8080, True)
+   app.run('0.0.0.0',8080, True)
