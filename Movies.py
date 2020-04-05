@@ -1,6 +1,12 @@
 from flask import Flask, request
-app = Flask(__name__)
+from flask_mysqldb import MySQL
 
+app = Flask(__name__)
+app.config['MYSQL_HOST'] = 'ut-mysql01.do-blr.mpgpsdc.com'
+app.config['MYSQL_USER'] = 'testuser'
+app.config['MYSQL_PASSWORD'] = 'test@1235'
+app.config['MYSQL_DB'] = 'testdb'
+mysql = MySQL(app)
 
 @app.route('/sign_up/',methods=["POST"])
 def new_customer():
@@ -16,6 +22,10 @@ def add_movie():
 
 @app.route('/get_movies/', methods=["GET"])
 def get_movies():
+    cursor = mysql.connection.cursor()
+    cursor.execute("select * from users;");
+    row = cursor.fetchall()
+    print str(row)
     return 'Testing'
 
 if __name__ == '__main__':
