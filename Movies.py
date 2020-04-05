@@ -26,8 +26,9 @@ def add_movie():
 
 @app.route('/get_movies/', methods=["GET"])
 def get_movies():
+    name = request.form['name']
     cur = mysql.connection.cursor()
-    cur.execute("select * from users")
+    cur.execute("select * from movies where name like '"+name+"%'")
     row = cur.fetchall()
     print str(row)
     return 'Testing'
