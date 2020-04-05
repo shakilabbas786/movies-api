@@ -1,0 +1,3 @@
+Flask==1.1.2
+mod_wsgi
+flask-mysql
