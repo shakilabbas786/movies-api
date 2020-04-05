@@ -1,4 +1,5 @@
 from flask import Flask, request
+from imdb import data
 from flask_mysqldb import MySQL
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'ut-mysql01.do-blr.mpgpsdc.com'
@@ -17,6 +18,10 @@ def new_customer():
 
 @app.route('/add_movie/', methods=["PUT"])
 def add_movie():
+    cur = mysql.connection.cursor()
+    for d in data:
+        cur.execute("INSERT INTO movies (name, director, popularity, imdb_score) VALUES ('%s', '%s', %s, %s)"%(d.get("name"), d.get("director"), d.get("99popularity"), d.get("imdb_score")))
+        mysql.connection.commit()
     return "Movie Added"
 
 @app.route('/get_movies/', methods=["GET"])
