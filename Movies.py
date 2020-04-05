@@ -1,6 +1,7 @@
 from flask import Flask, request
 from imdb import data
 from flask_mysqldb import MySQL
+import json
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'ut-mysql01.do-blr.mpgpsdc.com'
 app.config['MYSQL_USER'] = 'testuser'
@@ -24,14 +25,31 @@ def add_movie():
         mysql.connection.commit()
     return "Movie Added"
 
+@app.route('/update_movies/', methods=["POST"])
+def update_movies():
+    cur = mysql.connection.cursor()
+    for d in data:
+        try:
+            cur.execute("select id from movies where name = '"+d.get('name')+"' and director = '"+d.get('director')+"'")
+            movieID = cur.fetchall()[0][0]
+            print(movieID)
+            query = """update movies set genre = '"""+json.dumps(d.get('genre'))+"""' where id = %s"""%(movieID)
+            print(query)
+            cur.execute(query)
+            mysql.connection.commit()
+        except Exception as e:
+            pass
+
 @app.route('/get_movies/', methods=["GET"])
 def get_movies():
+    result = []
     name = request.form['name']
     cur = mysql.connection.cursor()
-    cur.execute("select * from movies where name like '"+name+"%'")
+    cur.execute("select name, director, imdb_score, popularity, genre from movies where name like '"+name+"%'")
     row = cur.fetchall()
-    print str(row)
-    return 'Testing'
+    for r in row:
+        result.append({"name":r[0], "director":r[1], "imdb":r[2], "popularity":r[3], "genre":r[4]})
+    return json.dumps(result)
 
 if __name__ == '__main__':
    app.run('139.59.66.134',8080, True)
