@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: MOVIES API
+  description: DOCUMENT FOR MOVIES API
+  version: 1.0.0
+servers:
+  - url: http://ut-gpschamps01.do-blr.mpgpsdc.com:8080
+    description: This is the test hostname
+    
+paths:
+  /get_movies/:
+    get:
+      summary: Get movie lists
+      parameters: 
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+        description: Get movie lists
+      responses:
+        '200':
+          description: Successful
+        '404':
+          description: Data not found.
+        default:
+          description: Unexpected error
+  
+  /add_movie/:
+    put:
+      summary: Add movie by admins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                director:
+                  type: string
+                imdb_score:
+                  type: integer
+                popularity:
+                  type: integer
+                genre:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Successful
+        '404':
+          description: Data not found.
+        default:
+          description: Unexpected error
